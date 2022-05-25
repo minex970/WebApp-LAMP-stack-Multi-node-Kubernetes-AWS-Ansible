@@ -1,0 +1,46 @@
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+  - cred.yml
+
+# Role for VPC
+  tasks:
+  - name: Running vpc Role
+    include_role:
+      name: vpc
+
+# Role for EC2
+  - name: Running provision Role
+    include_role:
+      name: provision
+
+# Role for NFS-node
+- hosts: nfs_node
+  tasks:
+  - name: Running NFS Server Role
+    include_role:
+      name: nfs_server
+
+# Role for Master-node
+- hosts: ec2_master
+  gather_facts: no
+  tasks:
+  - name: Running K8s Master Role
+    include_role:
+      name: k8s_master
+
+# Role for Slave-node
+- hosts: ec2_slave
+  gather_facts: no
+  tasks:
+  - name: Running K8s Slave Role
+    include_role:
+      name: k8s_slave
+
+# Role for web app with database
+- hosts: ec2_master
+  gather_facts: no
+  tasks:
+  - name: Running web_application Role
+    include_role:
+      name: web_application
